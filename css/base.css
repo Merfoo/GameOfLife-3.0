@@ -1,0 +1,56 @@
+#logo
+{
+  margin: auto;
+  display:inline;
+}
+
+div.left
+{
+	display:inline;
+	float:left;
+}
+
+div.gameArea
+{
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: Arial;
+	color:black;
+	font-weight:bold;
+	width:896px;
+	display:inline;
+}
+
+div#logodiv
+{
+	width:896px;
+}
+
+div#minimap
+{
+	display:inline;
+}
+
+canvas#gameCanvas
+{
+	position:relative;
+	border: 1px solid black;
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	display: relative;
+}
+
+body
+{
+  background-image: url('../img/background.png');
+  background-repeat: repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+p.center { 
+text-align: center; 
+}
