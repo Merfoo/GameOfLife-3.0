@@ -391,9 +391,13 @@ function Game() {
                 else
                 {
 		    		var limit = .9;
-		            if (currType == 5 || currType == 6)
+		            if (currType == 5)
 		            {
 		                newPop -= (currPop/2);
+		            }
+                    if (currType == 6)
+		            {
+		                newPop -= (currPop/1.5);
 		            }
 		            if (currType == 7)
 		            {
@@ -510,22 +514,20 @@ function gameInit() {
     myGame = new Game;
     myGame.Initialize();
     minimap(myGame.Map);
-    document.getElementById("makegraph").onmousedown = function()
-    {
-    	myGame.stop();
-    	_canvasContext.fillStyle = "#FFF";
-    	_canvasContext.fillRect(0, 0, width, height);
-    	_canvasContext.beginPath();
-    	for (var i = 1; i <= width; i++)
-    	{
-    		var y = height - PopScore[Math.round(i*myGame.turns/width)] * height/maxPop;
-	    	_canvasContext.lineTo(i, y);
-    	}
-    	_canvasContext.lineTo(width, height);
-    	_canvasContext.lineTo(0, height);
-    	_canvasContext.fill();
-    	_canvasContext.stroke();
-    
+    document.getElementById("makegraph").onmousedown = function() {
+        myGame.stop();
+        _canvasContext.fillStyle = "#FFF";
+        _canvasContext.fillRect(0, 0, width, height);
+        _canvasContext.beginPath();
+        for(var i = 1; i <= width; i++) {
+            var y = height - PopScore[Math.round(i * myGame.turns / width)] * height / maxPop;
+            _canvasContext.lineTo(i, y);
+        }
+        _canvasContext.lineTo(width, height);
+        _canvasContext.lineTo(0, height);
+        _canvasContext.fill();
+        _canvasContext.stroke();
+        
     }
     document.getElementById("restart").onmousedown = function () {
         myGame.stop();
