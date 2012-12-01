@@ -18,6 +18,8 @@ var numClicks = 0;
 
 var highestPop = 0;
 
+var makeGraph = 0;
+
 images = {
  water_far: 'img/water_far.png',
  water_near: 'img/water_near.png',
@@ -260,45 +262,77 @@ function Game() {
     height = document.getElementById("gameCanvas").getAttribute("height");
 
     var that = this;
+    this.turns = 0;
+    this.fps = 30;
 
-    this.Initialize = function () {
-    	this.turns = 0;
-        this.fps = 30;
-        this.DrawInterval = 1000/this.fps;
-        this.CheckMouseInterval = 5000/this.fps;
+    this.Initialize = function() {
+
+        makeGraph = 0;
+
+        this.DrawInterval = 1000 / this.fps;
+        this.CheckMouseInterval = 5000 / this.fps;
         var tileArray = new TileArray();
         this.Map = new Map(tileArray);
         this.Map.initMap(map_size);
 
         _canvas.addEventListener('mousemove', function(event) {
-            mousePos= getMousePos(event);
+            mousePos = getMousePos(event);
         }, false);
 
-        _canvas.onmousedown = function(event)
-        {
-        	if (numClicks < 3)
-        	{
-	            mousePos= getMousePos(event);
-	            var x = Math.floor(mousePos.x/tile_size) + camerax;
-	            var y = Math.floor(mousePos.y/tile_size) + cameray;
-	            if (that.Map.getTiles()[x][y].population < .9 && that.Map.getTiles()[x][y].type > 2)
-	            {
-	                that.Map.getTiles()[x][y].population += .1
-	            }
-	        	numClicks++;
-	        }
+        _canvas.onmousedown = function(event) {
+            if(numClicks < 3) {
+                mousePos = getMousePos(event);
+                var x = Math.floor(mousePos.x / tile_size) + camerax;
+                var y = Math.floor(mousePos.y / tile_size) + cameray;
+                if(that.Map.getTiles()[x][y].population < .9 && that.Map.getTiles()[x][y].type > 2) {
+                    that.Map.getTiles()[x][y].population += .1;
+                    numClicks++;   
+                }
+            }
         }
 
         var doKeyDown = function(event) {
             alert(event.keyCode);
         }
 
-        _canvas.addEventListener( "keydown", doKeyDown, true);
+        _canvas.addEventListener("keydown", doKeyDown, true);
 
 
 
         this.LoadContent();
         //this.RunGameLoop();
+    }
+
+    this.reInitialize = function() {
+        makeGraph = 0;
+        
+        this.DrawInterval = 1000 / this.fps;
+        this.CheckMouseInterval = 5000 / this.fps;
+
+        _canvas.addEventListener('mousemove', function(event) {
+            mousePos = getMousePos(event);
+        }, false);
+
+        _canvas.onmousedown = function(event) {
+            if(numClicks < 3) {
+                mousePos = getMousePos(event);
+                var x = Math.floor(mousePos.x / tile_size) + camerax;
+                var y = Math.floor(mousePos.y / tile_size) + cameray;
+                if(that.Map.getTiles()[x][y].population < .9 && that.Map.getTiles()[x][y].type > 2) {
+                    that.Map.getTiles()[x][y].population += .1;
+                    numClicks++;   
+                }
+            }
+        }
+
+        var doKeyDown = function(event) {
+            alert(event.keyCode);
+        }
+
+        _canvas.addEventListener("keydown", doKeyDown, true);
+
+        this.LoadContent();
+        
     }
 
     this.LoadContent = function () {
@@ -313,7 +347,6 @@ function Game() {
         that.Update();
         that.Draw();
     }
-
 
     this.checkMouse = function()
     {
@@ -357,7 +390,6 @@ function Game() {
         {
             newPops[i] = new Array();
         }
-
 
         for (var x = 0; x < map_size; x++)
         {
@@ -470,7 +502,6 @@ function Game() {
 
         }
 
-
         for (var x = 0; x < map_size; x++)
         {
             for (var y = 0; y < map_size; y++)
@@ -498,8 +529,8 @@ function Game() {
     
     this.stop = function()
     {
-	   	window.clearInterval(this.GameLoop);
-	   	window.clearInterval(this.CheckMouseLoop);
+	   	clearInterval(this.GameLoop);
+	   	clearInterval(this.CheckMouseLoop);
     }
 }
 
@@ -515,24 +546,29 @@ function gameInit() {
     myGame.Initialize();
     minimap(myGame.Map);
     document.getElementById("makegraph").onmousedown = function() {
-        myGame.stop();
-        _canvasContext.fillStyle = "#FFF";
-        _canvasContext.fillRect(0, 0, width, height);
-        _canvasContext.beginPath();
-        for(var i = 1; i <= width; i++) {
-            var y = height - PopScore[Math.round(i * myGame.turns / width)] * height / maxPop;
-            _canvasContext.lineTo(i, y);
+        if( makeGraph == 1) myGame.reInitialize();
+        else
+        {
+            myGame.stop();
+            makeGraph = 1;
+            _canvasContext.fillStyle = "#FFF";
+            _canvasContext.fillRect(0, 0, width, height);
+            _canvasContext.beginPath();
+            for(var i = 1; i <= width; i++) {
+                var y = height - PopScore[Math.round(i * myGame.turns / width)] * height / maxPop;
+                _canvasContext.lineTo(i, y);
+            }
+            _canvasContext.lineTo(width, height);
+            _canvasContext.lineTo(0, height);
+            _canvasContext.fill();
+            _canvasContext.stroke();
         }
-        _canvasContext.lineTo(width, height);
-        _canvasContext.lineTo(0, height);
-        _canvasContext.fill();
-        _canvasContext.stroke();
-        
-    }
+    };
     document.getElementById("restart").onmousedown = function () {
         myGame.stop();
         numClicks = 0;
         maxPop = 0;
+        makeGraph = 0;
         myGame.Initialize();
         minimap(myGame.Map);
     };
