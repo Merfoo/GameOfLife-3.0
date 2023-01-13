@@ -19,3 +19,8 @@ Gabriel Kulp,
 //Hamzah Khan, 
 //Isaac Archer, 
 Towaki Takikawa
+
+Running:
+--------
+
+Use `npm run start` to host the app on localhost:3000
